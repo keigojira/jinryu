@@ -20,18 +20,41 @@
         h1 {
             margin-bottom: 20px;
         }
-        input, button {
-            margin-bottom: 10px;
+        .players {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .player {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid black;
+        }
+        form {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>オンライン人狼ゲーム</h1>
-        <form action="/game/1" method="post">
-            <input type="text" name="name" placeholder="名前を入力してください" required>
-            <button type="submit">ゲームに参加する</button>
+        <input type="text" id="nameInput" placeholder="名前を入力してください" required>
+        <button id="joinButton">ゲームに参加する</button>
+        <div id="playersContainer" class="players"></div>
+        <form action="/game/1" method="post" id="voteForm">
+            <input type="hidden" name="name" id="voteName">
+            <button type="submit">投票する</button>
         </form>
     </div>
-</body>
-</html>
+
+    <script>
+        const nameInput = document.getElementById('nameInput');
+        const joinButton = document.getElementById('joinButton');
+        const playersContainer = document.getElementById('playersContainer');
+        const voteForm = document.getElementById('voteForm');
+        const voteName = document.getElementById('voteName');
+
+        const socket = new WebSocket('ws://localhost:8080');
+
+        joinButton.addEventListener('click', () => {
+            const name = nameInput.value;
